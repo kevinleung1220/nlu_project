@@ -8,7 +8,7 @@ import itertools
 import matplotlib.pyplot as plt
 import h5py
 import os
-import tensorflow as tf
+#import tensorflow as tf
 
 from keras.utils import to_categorical
 from keras.models import Sequential
@@ -18,13 +18,12 @@ from keras.callbacks import LearningRateScheduler, TensorBoard, EarlyStopping, M
 
 
 # Set tf flags to be used with bash files in order to adjust hyperparameters
-tf.app.flags.DEFINE_string('language', 'English', 'Language that our model is for')
-tf.app.flags.DEFINE_float('learning_rate', 0.0001, 'Initial learning rate.')
-tf.app.flags.DEFINE_float('drop_rate', 0.0, 'Dropout rate when training.')
-tf.app.flags.DEFINE_integer('input_size', 10, 'Num of Inputs')
-tf.app.flags.DEFINE_integer('embedding_size', 16, 'Size of embedding layer')
-tf.app.flags.DEFINE_integer('LSTM_size', 256, 'Size of LSTM layer')
-tf.app.flags.DEFINE_integer('GPU_num', 1, 'Which GPU is used')
+#tf.app.flags.DEFINE_float('learning_rate', 0.0001, 'Initial learning rate.')
+#tf.app.flags.DEFINE_float('drop_rate', 0.0, 'Dropout rate when training.')
+#tf.app.flags.DEFINE_integer('input_size', 10, 'Num of Inputs')
+#tf.app.flags.DEFINE_integer('embedding_size', 16, 'Size of embedding layer')
+#tf.app.flags.DEFINE_integer('LSTM_size', 256, 'Size of LSTM layer')
+#tf.app.flags.DEFINE_integer('GPU_num', 1, 'Which GPU is used')
 #tf.app.flags.DEFINE_string('file_path', '/data/denizlab/OA_dataset/MRI Models/', 'Main Folder to Save outputs')
 
 
@@ -87,7 +86,7 @@ def build_language_model(X_train,
 def main():
 
 	# Load data file and convert to lowercase
-	in_filename = 'Data/GlobalVoices_en.txt' # change this file for other languages
+	in_filename = 'Data/GlobalVoices_es.txt'
 	raw_text = load_doc(in_filename)
 	raw_text = raw_text.lower()
 	lines = raw_text.split('\n')
@@ -144,8 +143,8 @@ def main():
 
 	# Create map for character -> integer
 	chars = sorted(list(set(raw_text)))
-	# For English we only take the top 256 characters (there are way too many because of the presence of other languages)
-	chars = chars[0:256] # change this line for other languages
+	# For English we only take the top 256 characters (there are way too many because of the presence of other languaegs)
+	#chars = chars[0:256]
 	mapping = dict((c, i) for i, c in enumerate(chars))
 	print('Character mapping created:')
 	print(mapping)
@@ -154,7 +153,7 @@ def main():
 	encoded_train_sequences = list()
 	for row in train_sequences:
 	    # integer encode line; any characters outside of the first 256 are encoded as something else
-		encoded_seq = [mapping[char] if char in chars else 256 for char in row ] # change this line for other languages
+		encoded_seq = [mapping[char] for char in row ]
 		# store
 		encoded_train_sequences.append(encoded_seq)
 
@@ -163,14 +162,14 @@ def main():
 	encoded_val_sequences = list()
 	for row in val_sequences:
 	    # integer encode line; any characters outside of the first 256 are encoded as something else
-		encoded_seq = [mapping[char] if char in chars else 256 for char in row ] # change this line for other languages
+		encoded_seq = [mapping[char] for char in row ]
 		# store
 		encoded_val_sequences.append(encoded_seq)
 
 	print('Validation Set Encoded')
 
 	# Character-level vocabulary size
-	vocab_size = len(mapping) + 1
+	vocab_size = len(mapping) #+ 1 - change this line for other languages
 	print('Vocabulary Size: %d' % vocab_size)
 
 	# separate into input and output
@@ -185,18 +184,18 @@ def main():
 	path = os.getcwd()
 
 	# Generate path to save weights
-	model_path = path + '%s_lr%s_dr%s_inputsize%s_embeddingsize%s_LSTMsize%s_gpu%s/' % (FLAGS.language, FLAGS.learning_rate, FLAGS.drop_rate, FLAGS.input_size, FLAGS.embedding_size, FLAGS.LSTM_size, FLAGS.GPU_num)
+	model_path = path + '/%s_lr%s_dr%s_inputsize%s_embeddingsize%s_LSTMsize%s_gpu%s/' % ('Spanish', .001, .2, 10, 16, 256, 0) #(FLAGS.learning_rate, FLAGS.drop_rate, FLAGS.input_size, FLAGS.embedding_size, FLAGS.LSTM_size, FLAGS.GPU_num)
 	if not os.path.exists(model_path):
 		os.makedirs(model_path)
 
-	build_language_model(X_train=X_train, 
-						 y_train=y_train,
-						 X_val = X_val,
-						 y_val = y_val, 
-						 embedding_size=FLAGS.embedding_size, 
-						 LSTM_size=FLAGS.LSTM_size, 
-						 learning_rate=FLAGS.learning_rate, 
-						 dropout_prob=FLAGS.drop_rate, 
+	build_language_model(X_train=X_train[:10000], 
+						 y_train=y_train[:10000],
+						 X_val = X_val[:1000],
+						 y_val = y_val[:1000], 
+						 embedding_size=16, #FLAGS.embedding_size, 
+						 LSTM_size=256,#FLAGS.LSTM_size, 
+						 learning_rate=.001,#FLAGS.learning_rate, 
+						 dropout_prob=.2,#FLAGS.drop_rate, 
 						 vocab_size=vocab_size,
 						 path = model_path)
 
