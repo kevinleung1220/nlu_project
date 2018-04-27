@@ -18,7 +18,7 @@ from keras.callbacks import LearningRateScheduler, TensorBoard, EarlyStopping, M
 
 
 # Set tf flags to be used with bash files in order to adjust hyperparameters
-tf.app.flags.DEFINE_string('language', 'English', 'Language that our model is for')
+tf.app.flags.DEFINE_string('language', 'Spanish', 'Language that our model is for')
 tf.app.flags.DEFINE_float('learning_rate', 0.0001, 'Initial learning rate.')
 tf.app.flags.DEFINE_float('drop_rate', 0.0, 'Dropout rate when training.')
 tf.app.flags.DEFINE_integer('input_size', 10, 'Num of Inputs')
@@ -88,13 +88,13 @@ def build_language_model(X_train,
 def main(argv=None):
 
 	# Load data file and convert to lowercase
-	in_filename = 'Data/GlobalVoices_en.txt' # change this file for other languages
+	in_filename = 'Data/GlobalVoices_es.txt' # change this file for other languages
 	raw_text = load_doc(in_filename)
 	raw_text = raw_text.lower()
 	lines = raw_text.split('\n')
 
 	# hyperparam for the length of the input sequences
-	#length = 10
+	
 
 	# Number of sentences in training and validation sets
 	train_size = 250000
@@ -120,6 +120,7 @@ def main(argv=None):
 				# Break sentence into list of characters of the specified length
 				for i in range(FLAGS.input_size, len(line)):
 					seq = raw_text[i-FLAGS.input_size:i+1]
+					if i == 100 : print(len(seq))
 					train_sequences.append(seq)
 
 		# Build validation set
@@ -146,7 +147,7 @@ def main(argv=None):
 	# Create map for character -> integer
 	chars = sorted(list(set(raw_text)))
 	# For English we only take the top 256 characters (there are way too many because of the presence of other languages)
-	chars = chars[0:66] # change this line for other languages
+	#chars = chars[0:66] # change this line for other languages
 	mapping = dict((c, i) for i, c in enumerate(chars))
 	print('Character mapping created:')
 	print(mapping)
@@ -155,7 +156,7 @@ def main(argv=None):
 	encoded_train_sequences = list()
 	for row in train_sequences:
 	    # integer encode line; any characters outside of the first 256 are encoded as something else
-		encoded_seq = [mapping[char] if char in chars else 66 for char in row ] # change this line for other languages
+		encoded_seq = [mapping[char] for char in row ] # change this line for other languages
 		# store
 		encoded_train_sequences.append(encoded_seq)
 
@@ -164,14 +165,14 @@ def main(argv=None):
 	encoded_val_sequences = list()
 	for row in val_sequences:
 	    # integer encode line; any characters outside of the first 256 are encoded as something else
-		encoded_seq = [mapping[char] if char in chars else 66 for char in row ] # change this line for other languages
+		encoded_seq = [mapping[char] for char in row ] # change this line for other languages
 		# store
 		encoded_val_sequences.append(encoded_seq)
 
 	print('Validation Set Encoded')
 
 	# Character-level vocabulary size
-	vocab_size = len(mapping) + 1
+	vocab_size = len(mapping) 
 	print('Vocabulary Size: %d' % vocab_size)
 
 	# separate into input and output

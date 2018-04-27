@@ -1,0 +1,12 @@
+CUDA_VISIBLE_DEVICES=0 python char_level_language_model_en.py --language 'English' --learning_rate .001 --drop_rate 0.2 --input_size 11 --embedding_size 16 --LSTM_size 256 --GPU_num 0 &&
+CUDA_VISIBLE_DEVICES=0 python char_level_language_model_en.py --language 'English' --learning_rate .0001 --drop_rate 0.2 --input_size 11 --embedding_size 16 --LSTM_size 256 --GPU_num 0 &&
+CUDA_VISIBLE_DEVICES=0 python char_level_language_model_en.py --language 'English' --learning_rate .01 --drop_rate 0.2 --input_size 11 --embedding_size 16 --LSTM_size 256 --GPU_num 0 &&
+CUDA_VISIBLE_DEVICES=0 python char_level_language_model_en.py --language 'English' --learning_rate .001 --drop_rate 0.2 --input_size 16 --embedding_size 16 --LSTM_size 256 --GPU_num 0 &&
+CUDA_VISIBLE_DEVICES=0 python char_level_language_model_en.py --language 'English' --learning_rate .0001 --drop_rate 0.2 --input_size 16 --embedding_size 16 --LSTM_size 256 --GPU_num 0 &&
+CUDA_VISIBLE_DEVICES=0 python char_level_language_model_en.py --language 'English' --learning_rate .01 --drop_rate 0.2 --input_size 16 --embedding_size 16 --LSTM_size 256 --GPU_num 0 &&
+CUDA_VISIBLE_DEVICES=0 python char_level_language_model_en.py --language 'English' --learning_rate .001 --drop_rate 0.2 --input_size 11 --embedding_size 16 --LSTM_size 128 --GPU_num 0 &&
+CUDA_VISIBLE_DEVICES=0 python char_level_language_model_en.py --language 'English' --learning_rate .0001 --drop_rate 0.2 --input_size 11 --embedding_size 16 --LSTM_size 128 --GPU_num 0 &&
+CUDA_VISIBLE_DEVICES=0 python char_level_language_model_en.py --language 'English' --learning_rate .01 --drop_rate 0.2 --input_size 11 --embedding_size 16 --LSTM_size 128 --GPU_num 0 &&
+CUDA_VISIBLE_DEVICES=0 python char_level_language_model_en.py --language 'English' --learning_rate .001 --drop_rate 0.2 --input_size 16 --embedding_size 16 --LSTM_size 128 --GPU_num 0 &&
+CUDA_VISIBLE_DEVICES=0 python char_level_language_model_en.py --language 'English' --learning_rate .0001 --drop_rate 0.2 --input_size 16 --embedding_size 16 --LSTM_size 128 --GPU_num 0 &&
+CUDA_VISIBLE_DEVICES=0 python char_level_language_model_en.py --language 'English' --learning_rate .01 --drop_rate 0.2 --input_size 16 --embedding_size 16 --LSTM_size 128 --GPU_num 0 &&
