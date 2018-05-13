@@ -15,6 +15,7 @@ from keras.models import Sequential
 from keras.layers import Dense, LSTM, Embedding, Dropout
 from keras.optimizers import Adam
 from keras.callbacks import LearningRateScheduler, TensorBoard, EarlyStopping, ModelCheckpoint
+from keras.preprocessing.sequence import pad_sequences
 
 
 # Set tf flags to be used with bash files in order to adjust hyperparameters
@@ -97,8 +98,8 @@ def main(argv=None):
 	#length = 10
 
 	# Number of sentences in training and validation sets
-	train_size = 250000
-	val_size = 25000
+	train_size = 75000
+	val_size = 7500
 
 	# Generate dataset for character-level language modeling
 	train_sequences = list()
@@ -118,8 +119,11 @@ def main(argv=None):
 				j += 1
 				t = j
 				# Break sentence into list of characters of the specified length
-				for i in range(FLAGS.input_size, len(line)):
-					seq = raw_text[i-FLAGS.input_size:i+1]
+				for i in range(1, len(line)):
+					if i < FLAGS.input_size:
+						seq = line[0:i+1]
+					else:
+						seq = line[i-FLAGS.input_size:i+1]
 					train_sequences.append(seq)
 
 		# Build validation set
@@ -131,8 +135,12 @@ def main(argv=None):
 			if line[-1:] == '.' or line[-1:] == '?' or line[-1:] == '!' or line[-1:] == '"':
 				j += 1
 				# Break sentence into list of characters of the specified length
-				for i in range(FLAGS.input_size, len(line)):
-					seq = raw_text[i-FLAGS.input_size:i+1]
+				for i in range(1, len(line)):
+					if i < FLAGS.input_size:
+						val_seq = line[0:i+1]
+					else:
+						val_seq = line[i-FLAGS.input_size:i+1]
+
 					val_sequences.append(seq)
 
 	print('Validation Set Created')
@@ -173,6 +181,11 @@ def main(argv=None):
 	# Character-level vocabulary size
 	vocab_size = len(mapping) + 1
 	print('Vocabulary Size: %d' % vocab_size)
+
+	max_len = FLAGS.input_size + 1
+
+	encoded_train_sequences = pad_sequences(encoded_train_sequences, max_len)
+	encoded_val_sequences = pad_sequences(encoded_val_sequences, max_len)
 
 	# separate into input and output
 	encoded_train_sequences = np.array(encoded_train_sequences) #, shape = (len(sequences),length))
